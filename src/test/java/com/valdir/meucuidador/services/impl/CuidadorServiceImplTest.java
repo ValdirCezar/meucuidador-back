@@ -4,6 +4,7 @@ import com.valdir.meucuidador.domain.Cuidador;
 import com.valdir.meucuidador.domain.enums.Perfil;
 import com.valdir.meucuidador.repository.CuidadorRepository;
 
+import com.valdir.meucuidador.services.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class CuidadorServiceImplTest {
     }
 
     @Test
-    void findByIdTest() {
+    void findByIdSuccessTest() {
         Mockito.when(repository.findById(Mockito.anyInt())).thenReturn(this.cuidador);
 
         Cuidador response = service.findById(ID);
@@ -46,6 +47,19 @@ class CuidadorServiceImplTest {
             Assertions.assertEquals(response.getCpf(), cuidador.get().getCpf());
             Assertions.assertEquals(response.getEmail(), cuidador.get().getEmail());
             Assertions.assertEquals(response.getPerfis(), cuidador.get().getPerfis());
+        }
+    }
+
+    @Test
+    void findByIdErrorTest() {
+        ObjectNotFoundException notFoundException = new ObjectNotFoundException("Objeto não encontrado");
+        Mockito.when(repository.findById(Mockito.anyInt())).thenThrow(notFoundException);
+
+        try{
+            Cuidador response = service.findById(ID);
+        } catch (Exception ex) {
+            Assertions.assertEquals(notFoundException.getClass(), ex.getClass());
+            Assertions.assertEquals(notFoundException.getMessage(), ex.getMessage());
         }
     }
 
