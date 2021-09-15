@@ -1,17 +1,13 @@
-package com.valdir.meucuidador.domain;
+package com.valdir.meucuidador.domain.dto;
 
-import com.valdir.meucuidador.domain.dto.IdosoDTO;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.valdir.meucuidador.domain.Idoso;
 
-import javax.persistence.Entity;
+import java.io.Serializable;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
-public class Idoso extends Usuario{
+public class IdosoDTO extends UsuarioDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    public Idoso(IdosoDTO obj) {
+    public IdosoDTO(Idoso obj) {
         this.id = obj.getId();
         this.nome = obj.getNome();
         this.cpf = obj.getCpf();
