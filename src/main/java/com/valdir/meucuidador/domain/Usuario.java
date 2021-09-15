@@ -2,11 +2,10 @@ package com.valdir.meucuidador.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,13 +17,24 @@ public abstract class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String nome;
-    private String cpf;
-    private String phone;
-    private String email;
-    private String senha;
-    private String sobre;
+    protected Integer id;
+    protected String nome;
+
+    @Column(unique = true)
+    protected String cpf;
+
+    @Column(unique = true)
+    protected String phone;
+
+    @Column(unique = true)
+    protected String email;
+    protected String senha;
+    protected String sobre;
+
+    @CollectionTable
+    @ElementCollection(fetch = FetchType.EAGER)
+    protected Set<Integer> perfis;
+    protected LocalDateTime dataCriacao = LocalDateTime.now();
 
     @Override
     public boolean equals(Object o) {
