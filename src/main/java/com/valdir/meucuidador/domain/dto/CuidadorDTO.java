@@ -1,17 +1,15 @@
-package com.valdir.meucuidador.domain;
+package com.valdir.meucuidador.domain.dto;
 
-import com.valdir.meucuidador.domain.dto.CuidadorDTO;
-import lombok.AllArgsConstructor;
+import com.valdir.meucuidador.domain.Cuidador;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
+import java.io.Serializable;
 
-@Entity
 @NoArgsConstructor
-@AllArgsConstructor
-public class Cuidador extends Usuario {
+public class CuidadorDTO extends UsuarioDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    public Cuidador(CuidadorDTO obj) {
+    public CuidadorDTO(Cuidador obj) {
         this.id = obj.getId();
         this.nome = obj.getNome();
         this.cpf = obj.getCpf();
@@ -21,5 +19,4 @@ public class Cuidador extends Usuario {
         this.perfis = obj.getPerfis();
         this.dataCriacao = obj.getDataCriacao();
     }
-
 }
