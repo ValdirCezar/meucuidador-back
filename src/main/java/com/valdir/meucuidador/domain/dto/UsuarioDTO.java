@@ -12,8 +12,6 @@ import java.util.Set;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
 public abstract class UsuarioDTO {
 
     protected Integer id;

@@ -4,14 +4,13 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity(name = "TB_USUARIO")
 public abstract class Usuario {
 
@@ -39,7 +38,7 @@ public abstract class Usuario {
 
     @CollectionTable
     @ElementCollection(fetch = FetchType.EAGER)
-    protected Set<Integer> perfis;
+    protected Set<Integer> perfis = new HashSet<>();
     protected LocalDateTime dataCriacao = LocalDateTime.now();
 
     @Override

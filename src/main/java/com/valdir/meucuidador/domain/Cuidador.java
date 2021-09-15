@@ -1,14 +1,11 @@
 package com.valdir.meucuidador.domain;
 
 import com.valdir.meucuidador.domain.dto.CuidadorDTO;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.valdir.meucuidador.domain.enums.Perfil;
 
 import javax.persistence.Entity;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 public class Cuidador extends Usuario {
 
     public Cuidador(CuidadorDTO obj) {
@@ -21,5 +18,11 @@ public class Cuidador extends Usuario {
         this.perfis = obj.getPerfis();
         this.dataCriacao = obj.getDataCriacao();
     }
+
+    public Cuidador() {
+        addPerfil(Perfil.CUIDADOR);
+    }
+
+    public void addPerfil(Perfil perfil) { perfis.add(perfil.getCodigo()); }
 
 }
