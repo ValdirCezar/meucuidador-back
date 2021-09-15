@@ -18,17 +18,23 @@ public abstract class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
+
+    @Column(length = 100)
     protected String nome;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 20)
     protected String cpf;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 20)
     protected String phone;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 100)
     protected String email;
+
+    @Column(length = 100)
     protected String senha;
+
+    @Column(length = 3000)
     protected String sobre;
 
     @CollectionTable
