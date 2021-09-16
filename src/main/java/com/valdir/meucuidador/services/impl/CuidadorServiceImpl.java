@@ -30,7 +30,6 @@ public class CuidadorServiceImpl implements CuidadorService {
 
     @Override
     public Cuidador create(CuidadorDTO dto) {
-        dto.setId(null);
         validByCPFEmailAndPhone(dto);
         return repository.save(new Cuidador(dto));
     }

@@ -20,7 +20,8 @@ import java.util.Optional;
 @SpringBootTest
 class CuidadorServiceImplTest {
 
-    private static final Integer ID    = 1;
+    private static final int ID        = 1;
+    private static final int ID_2      = 2;
     private static final String NOME   = "Valdir Cezar";
     private static final String CPF    = "66090972088";
     private static final String EMAIL  = "email@test.com";
@@ -43,6 +44,7 @@ class CuidadorServiceImplTest {
     void setUp() {
         iniciaOptionalCuidador();
         iniciaCuidador();
+        iniciaCuidadorDTO();
     }
 
     @Test
@@ -109,6 +111,7 @@ class CuidadorServiceImplTest {
         Mockito.when(repository.findByCpf(Mockito.any())).thenReturn(optionalCuidador);
 
         try{
+            cuidadorDTO.setId(ID_2);
             service.create(cuidadorDTO);
         } catch (Exception ex) {
             Assertions.assertEquals(exception.getClass(), ex.getClass());
@@ -124,6 +127,7 @@ class CuidadorServiceImplTest {
         Mockito.when(repository.findByEmail(Mockito.any())).thenReturn(optionalCuidador);
 
         try{
+            cuidadorDTO.setId(ID_2);
             service.create(cuidadorDTO);
         } catch (Exception ex) {
             Assertions.assertEquals(exception.getClass(), ex.getClass());
@@ -139,6 +143,7 @@ class CuidadorServiceImplTest {
         Mockito.when(repository.findByPhone(Mockito.any())).thenReturn(optionalCuidador);
 
         try{
+            cuidadorDTO.setId(ID_2);
             service.create(cuidadorDTO);
         } catch (Exception ex) {
             Assertions.assertEquals(exception.getClass(), ex.getClass());
@@ -163,8 +168,16 @@ class CuidadorServiceImplTest {
         cuidador.setCpf(CPF);
         cuidador.setEmail(EMAIL);
         cuidador.addPerfil(PERFIL);
+    }
 
-        cuidadorDTO = new CuidadorDTO(cuidador);
+    private void iniciaCuidadorDTO() {
+        cuidadorDTO = new CuidadorDTO();
+
+        cuidadorDTO.setId(ID);
+        cuidadorDTO.setNome(NOME);
+        cuidadorDTO.setCpf(CPF);
+        cuidadorDTO.setEmail(EMAIL);
+        cuidadorDTO.addPerfil(PERFIL);
     }
 
 }
