@@ -1,6 +1,7 @@
 package com.valdir.meucuidador.services.impl;
 
 import com.valdir.meucuidador.domain.Cuidador;
+import com.valdir.meucuidador.domain.dto.CuidadorDTO;
 import com.valdir.meucuidador.domain.enums.Perfil;
 import com.valdir.meucuidador.repository.CuidadorRepository;
 import com.valdir.meucuidador.services.exception.ObjectNotFoundException;
@@ -23,6 +24,7 @@ class CuidadorServiceImplTest {
     private static final String CPF    = "66090972088";
     private static final String EMAIL  = "email@test.com";
     private static final Perfil PERFIL = Perfil.CUIDADOR;
+    private static final int INDEX_0   = 0;
 
     @InjectMocks
     private CuidadorServiceImpl service;
@@ -32,6 +34,7 @@ class CuidadorServiceImplTest {
 
     private Optional<Cuidador> optionalCuidador;
     private Cuidador cuidador;
+    private CuidadorDTO cuidadorDTO;
 
     @BeforeEach
     void setUp() {
@@ -75,11 +78,24 @@ class CuidadorServiceImplTest {
         List<Cuidador> response = service.findAll();
 
         Assertions.assertEquals(response.size(), list.size());
-        Assertions.assertEquals(response.get(0).getId(), list.get(0).getId());
-        Assertions.assertEquals(response.get(0).getNome(), list.get(0).getNome());
-        Assertions.assertEquals(response.get(0).getCpf(), list.get(0).getCpf());
-        Assertions.assertEquals(response.get(0).getEmail(), list.get(0).getEmail());
-        Assertions.assertEquals(response.get(0).getPerfis(), list.get(0).getPerfis());
+        Assertions.assertEquals(response.get(INDEX_0).getId(), list.get(INDEX_0).getId());
+        Assertions.assertEquals(response.get(INDEX_0).getNome(), list.get(INDEX_0).getNome());
+        Assertions.assertEquals(response.get(INDEX_0).getCpf(), list.get(INDEX_0).getCpf());
+        Assertions.assertEquals(response.get(INDEX_0).getEmail(), list.get(INDEX_0).getEmail());
+        Assertions.assertEquals(response.get(INDEX_0).getPerfis(), list.get(INDEX_0).getPerfis());
+    }
+
+    @Test
+    void createSuccessTest() {
+        Mockito.when(repository.save(Mockito.any(Cuidador.class))).thenReturn(cuidador);
+
+        Cuidador response = service.create(cuidadorDTO);
+
+        Assertions.assertEquals(response.getId(), cuidador.getId());
+        Assertions.assertEquals(response.getNome(), cuidador.getNome());
+        Assertions.assertEquals(response.getCpf(), cuidador.getCpf());
+        Assertions.assertEquals(response.getEmail(), cuidador.getEmail());
+        Assertions.assertEquals(response.getPerfis(), cuidador.getPerfis());
     }
 
     private void iniciaOptionalCuidador() {
@@ -99,6 +115,8 @@ class CuidadorServiceImplTest {
         cuidador.setCpf(CPF);
         cuidador.setEmail(EMAIL);
         cuidador.addPerfil(PERFIL);
+
+        cuidadorDTO = new CuidadorDTO(cuidador);
     }
 
 }
