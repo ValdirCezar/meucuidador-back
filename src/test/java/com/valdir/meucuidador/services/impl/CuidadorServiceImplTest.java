@@ -131,6 +131,21 @@ class CuidadorServiceImplTest {
 
     }
 
+    @Test
+    void createWithPhoneErrorTest() {
+        DataIntegratyViolationException exception
+                = new DataIntegratyViolationException("TELEFONE " + JA_CADASTRADO_NO_SISTEMA);
+
+        Mockito.when(repository.findByPhone(Mockito.any())).thenReturn(optionalCuidador);
+
+        try{
+            service.create(cuidadorDTO);
+        } catch (Exception ex) {
+            Assertions.assertEquals(exception.getClass(), ex.getClass());
+        }
+
+    }
+
     private void iniciaOptionalCuidador() {
         optionalCuidador = Optional.of(new Cuidador());
 
