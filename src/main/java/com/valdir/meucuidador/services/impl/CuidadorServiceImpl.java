@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class CuidadorServiceImpl implements CuidadorService {
 
-    private static final String JÁ_CADASTRADO_NO_SISTEMA = "já cadastrado no sistema";
+    private static final String JA_CADASTRADO_NO_SISTEMA = "já cadastrado no sistema";
     @Autowired
     private CuidadorRepository repository;
 
@@ -35,20 +35,29 @@ public class CuidadorServiceImpl implements CuidadorService {
         return repository.save(new Cuidador(dto));
     }
 
+    @Override
+    public Cuidador update(CuidadorDTO dto, Integer id) {
+        dto.setId(id);
+        Cuidador obj = findById(dto.getId());
+        validByCPFEmailAndPhone(dto);
+        obj = new Cuidador(dto);
+        return repository.save(obj);
+    }
+
     private void validByCPFEmailAndPhone(CuidadorDTO dto) {
         Optional<Cuidador> cuidador = repository.findByCpf(dto.getCpf());
-        if(cuidador.isPresent()) {
-            throw new DataIntegratyViolationException("CPF " + JÁ_CADASTRADO_NO_SISTEMA);
+        if(cuidador.isPresent() && !dto.getId().equals(cuidador.get().getId())) {
+            throw new DataIntegratyViolationException("CPF " + JA_CADASTRADO_NO_SISTEMA);
         }
 
         cuidador = repository.findByEmail(dto.getEmail());
-        if(cuidador.isPresent()) {
-            throw new DataIntegratyViolationException("E-MAIL " + JÁ_CADASTRADO_NO_SISTEMA);
+        if(cuidador.isPresent() && !dto.getId().equals(cuidador.get().getId())) {
+            throw new DataIntegratyViolationException("E-MAIL " + JA_CADASTRADO_NO_SISTEMA);
         }
 
         cuidador = repository.findByPhone(dto.getPhone());
-        if(cuidador.isPresent()) {
-            throw new DataIntegratyViolationException("TELEFONE " + JÁ_CADASTRADO_NO_SISTEMA);
+        if(cuidador.isPresent() && !dto.getId().equals(cuidador.get().getId())) {
+            throw new DataIntegratyViolationException("TELEFONE " + JA_CADASTRADO_NO_SISTEMA);
         }
     }
 }

@@ -14,4 +14,6 @@ public interface CuidadorService {
     List<Cuidador> findAll();
 
     Cuidador create(CuidadorDTO dto);
+
+    Cuidador update(CuidadorDTO dto, Integer id);
 }
