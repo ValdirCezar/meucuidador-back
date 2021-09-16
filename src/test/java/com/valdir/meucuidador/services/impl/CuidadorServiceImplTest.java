@@ -116,6 +116,21 @@ class CuidadorServiceImplTest {
 
     }
 
+    @Test
+    void createWithEmailErrorTest() {
+        DataIntegratyViolationException exception
+                = new DataIntegratyViolationException("E-MAIL " + JA_CADASTRADO_NO_SISTEMA);
+
+        Mockito.when(repository.findByEmail(Mockito.any())).thenReturn(optionalCuidador);
+
+        try{
+            service.create(cuidadorDTO);
+        } catch (Exception ex) {
+            Assertions.assertEquals(exception.getClass(), ex.getClass());
+        }
+
+    }
+
     private void iniciaOptionalCuidador() {
         optionalCuidador = Optional.of(new Cuidador());
 
