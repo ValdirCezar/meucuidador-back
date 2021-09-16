@@ -4,6 +4,7 @@ import com.valdir.meucuidador.domain.Cuidador;
 import com.valdir.meucuidador.domain.dto.CuidadorDTO;
 import com.valdir.meucuidador.domain.enums.Perfil;
 import com.valdir.meucuidador.repository.CuidadorRepository;
+import com.valdir.meucuidador.services.exception.DataIntegratyViolationException;
 import com.valdir.meucuidador.services.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,8 @@ class CuidadorServiceImplTest {
     private static final String EMAIL  = "email@test.com";
     private static final Perfil PERFIL = Perfil.CUIDADOR;
     private static final int INDEX_0   = 0;
+
+    private static final String JA_CADASTRADO_NO_SISTEMA = "já cadastrado no sistema";
 
     @InjectMocks
     private CuidadorServiceImpl service;
@@ -96,6 +99,21 @@ class CuidadorServiceImplTest {
         Assertions.assertEquals(response.getCpf(), cuidador.getCpf());
         Assertions.assertEquals(response.getEmail(), cuidador.getEmail());
         Assertions.assertEquals(response.getPerfis(), cuidador.getPerfis());
+    }
+
+    @Test
+    void createWithCPFErrorTest() {
+        DataIntegratyViolationException exception
+                = new DataIntegratyViolationException("CPF " + JA_CADASTRADO_NO_SISTEMA);
+
+        Mockito.when(repository.findByCpf(Mockito.any())).thenReturn(optionalCuidador);
+
+        try{
+            service.create(cuidadorDTO);
+        } catch (Exception ex) {
+            Assertions.assertEquals(exception.getClass(), ex.getClass());
+        }
+
     }
 
     private void iniciaOptionalCuidador() {
