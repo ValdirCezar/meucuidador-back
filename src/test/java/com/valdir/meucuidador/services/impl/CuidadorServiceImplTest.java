@@ -20,13 +20,16 @@ import java.util.Optional;
 @SpringBootTest
 class CuidadorServiceImplTest {
 
-    private static final Integer ID    = 1;
-    private static final Integer ID_2  = 2;
-    private static final String NOME   = "Valdir Cezar";
-    private static final String CPF    = "66090972088";
-    private static final String EMAIL  = "email@test.com";
-    private static final Perfil PERFIL = Perfil.CUIDADOR;
-    private static final int INDEX_0   = 0;
+    private static final Integer ID        = 1;
+    private static final Integer ID_2      = 2;
+    private static final String NOME       = "Valdir Cezar";
+    private static final String CPF        = "66090972088";
+    private static final String EMAIL      = "email@test.com";
+    private static final Perfil PERFIL     = Perfil.CUIDADOR;
+    private static final Integer INDEX_0   = 0;
+    private static final String SOBRE      = "Sobre";
+    private static final String SENHA      = "123";
+    private static final String PHONE      = "43984634308";
 
     private static final String JA_CADASTRADO_NO_SISTEMA = "já cadastrado no sistema";
 
@@ -54,11 +57,14 @@ class CuidadorServiceImplTest {
         Cuidador response = service.findById(ID);
 
         if(optionalCuidador.isPresent()) {
-            Assertions.assertEquals(response.getId(), optionalCuidador.get().getId());
-            Assertions.assertEquals(response.getNome(), optionalCuidador.get().getNome());
-            Assertions.assertEquals(response.getCpf(), optionalCuidador.get().getCpf());
-            Assertions.assertEquals(response.getEmail(), optionalCuidador.get().getEmail());
-            Assertions.assertEquals(response.getPerfis(), optionalCuidador.get().getPerfis());
+            Assertions.assertEquals(optionalCuidador.get().getId(), response.getId());
+            Assertions.assertEquals(optionalCuidador.get().getNome(), response.getNome());
+            Assertions.assertEquals(optionalCuidador.get().getCpf(), response.getCpf());
+            Assertions.assertEquals(optionalCuidador.get().getEmail(), response.getEmail());
+            Assertions.assertEquals(optionalCuidador.get().getPhone(), response.getPhone());
+            Assertions.assertEquals(optionalCuidador.get().getSenha(), response.getSenha());
+            Assertions.assertEquals(optionalCuidador.get().getSobre(), response.getSobre());
+            Assertions.assertEquals(optionalCuidador.get().getPerfis(), response.getPerfis());
         }
     }
 
@@ -68,7 +74,7 @@ class CuidadorServiceImplTest {
         Mockito.when(repository.findById(Mockito.anyInt())).thenThrow(notFoundException);
 
         try{
-            Cuidador response = service.findById(ID);
+            service.findById(ID);
         } catch (Exception ex) {
             Assertions.assertEquals(notFoundException.getClass(), ex.getClass());
             Assertions.assertEquals(notFoundException.getMessage(), ex.getMessage());
@@ -87,6 +93,9 @@ class CuidadorServiceImplTest {
         Assertions.assertEquals(response.get(INDEX_0).getNome(), list.get(INDEX_0).getNome());
         Assertions.assertEquals(response.get(INDEX_0).getCpf(), list.get(INDEX_0).getCpf());
         Assertions.assertEquals(response.get(INDEX_0).getEmail(), list.get(INDEX_0).getEmail());
+        Assertions.assertEquals(response.get(INDEX_0).getPhone(), list.get(INDEX_0).getPhone());
+        Assertions.assertEquals(response.get(INDEX_0).getSenha(), list.get(INDEX_0).getSenha());
+        Assertions.assertEquals(response.get(INDEX_0).getSobre(), list.get(INDEX_0).getSobre());
         Assertions.assertEquals(response.get(INDEX_0).getPerfis(), list.get(INDEX_0).getPerfis());
     }
 
@@ -100,8 +109,12 @@ class CuidadorServiceImplTest {
         Assertions.assertEquals(cuidador.getNome(), response.getNome());
         Assertions.assertEquals(cuidador.getCpf(), response.getCpf());
         Assertions.assertEquals(cuidador.getEmail(), response.getEmail());
+        Assertions.assertEquals(cuidador.getPhone(), response.getPhone());
+        Assertions.assertEquals(cuidador.getSenha(), response.getSenha());
+        Assertions.assertEquals(cuidador.getSobre(), response.getSobre());
         Assertions.assertEquals(cuidador.getPerfis(), response.getPerfis());
     }
+    
 
     @Test
     void createWithCPFErrorTest() {
@@ -137,8 +150,6 @@ class CuidadorServiceImplTest {
 
     @Test
     void createWithPhoneErrorTest() {
-        DataIntegratyViolationException exception
-                = new DataIntegratyViolationException("TELEFONE " + JA_CADASTRADO_NO_SISTEMA);
 
         Mockito.when(repository.findByPhone(Mockito.any())).thenReturn(optionalCuidador);
 
@@ -146,13 +157,13 @@ class CuidadorServiceImplTest {
             cuidadorDTO.setId(ID_2);
             service.create(cuidadorDTO);
         } catch (Exception ex) {
-            Assertions.assertEquals(exception.getClass(), ex.getClass());
+            Assertions.assertEquals(DataIntegratyViolationException.class, ex.getClass());
         }
 
     }
 
     @Test
-    void updateWhitSuccessTest() {
+    void updateWithSuccessTest() {
         Mockito.when(repository.findById(Mockito.anyInt())).thenReturn(optionalCuidador);
         Mockito.when(repository.save(Mockito.any())).thenReturn(cuidador);
 
@@ -162,7 +173,20 @@ class CuidadorServiceImplTest {
         Assertions.assertEquals(cuidador.getNome(), response.getNome());
         Assertions.assertEquals(cuidador.getCpf(), response.getCpf());
         Assertions.assertEquals(cuidador.getEmail(), response.getEmail());
+        Assertions.assertEquals(cuidador.getPhone(), response.getPhone());
+        Assertions.assertEquals(cuidador.getSenha(), response.getSenha());
+        Assertions.assertEquals(cuidador.getSobre(), response.getSobre());
         Assertions.assertEquals(cuidador.getPerfis(), response.getPerfis());
+    }
+
+    @Test
+    void updateWithObjectNotFoundErrorTest() {
+        try {
+            service.update(cuidadorDTO, ID);
+        } catch (Exception ex) {
+            Assertions.assertEquals(ObjectNotFoundException.class, ex.getClass());
+            Assertions.assertEquals("Objeto não encontrado", ex.getMessage());
+        }
     }
 
     private void iniciaOptionalCuidador() {
@@ -172,7 +196,10 @@ class CuidadorServiceImplTest {
         optionalCuidador.get().setNome(NOME);
         optionalCuidador.get().setCpf(CPF);
         optionalCuidador.get().setEmail(EMAIL);
+        optionalCuidador.get().setPhone(PHONE);
+        optionalCuidador.get().setSenha(SENHA);
         optionalCuidador.get().addPerfil(PERFIL);
+        optionalCuidador.get().setSobre(SOBRE);
     }
 
     private void iniciaCuidador() {
@@ -181,7 +208,10 @@ class CuidadorServiceImplTest {
         cuidador.setNome(NOME);
         cuidador.setCpf(CPF);
         cuidador.setEmail(EMAIL);
+        cuidador.setPhone(PHONE);
+        cuidador.setSenha(SENHA);
         cuidador.addPerfil(PERFIL);
+        cuidador.setSobre(SOBRE);
     }
 
     private void iniciaCuidadorDTO() {
@@ -191,7 +221,10 @@ class CuidadorServiceImplTest {
         cuidadorDTO.setNome(NOME);
         cuidadorDTO.setCpf(CPF);
         cuidadorDTO.setEmail(EMAIL);
+        cuidadorDTO.setPhone(PHONE);
+        cuidadorDTO.setSenha(SENHA);
         cuidadorDTO.addPerfil(PERFIL);
+        cuidadorDTO.setSobre(SOBRE);
     }
 
 }

@@ -17,6 +17,7 @@ public class CuidadorDTO extends UsuarioDTO implements Serializable {
         this.email = obj.getEmail();
         this.senha = obj.getSenha();
         this.perfis = obj.getPerfis();
+        this.sobre = obj.getSobre();
         this.dataCriacao = obj.getDataCriacao();
     }
 
