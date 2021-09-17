@@ -1,11 +1,11 @@
 package com.valdir.meucuidador.domain.dto;
 
 import com.valdir.meucuidador.domain.Cuidador;
-import lombok.NoArgsConstructor;
+import com.valdir.meucuidador.domain.enums.Perfil;
 
 import java.io.Serializable;
+import java.util.HashSet;
 
-@NoArgsConstructor
 public class CuidadorDTO extends UsuarioDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -17,6 +17,14 @@ public class CuidadorDTO extends UsuarioDTO implements Serializable {
         this.email = obj.getEmail();
         this.senha = obj.getSenha();
         this.perfis = obj.getPerfis();
+        this.sobre = obj.getSobre();
         this.dataCriacao = obj.getDataCriacao();
     }
+
+    public CuidadorDTO() {
+        this.perfis = new HashSet<>();
+        addPerfil(Perfil.CUIDADOR);
+    }
+
+    public void addPerfil(Perfil perfil) { perfis.add(perfil.getCodigo()); }
 }
