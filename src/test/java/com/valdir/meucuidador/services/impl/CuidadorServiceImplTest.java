@@ -11,15 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class CuidadorServiceImplTest {
@@ -47,6 +46,8 @@ class CuidadorServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.initMocks(this);
+
         iniciaOptionalCuidador();
         iniciaCuidador();
         iniciaCuidadorDTO();
@@ -116,7 +117,6 @@ class CuidadorServiceImplTest {
         assertEquals(cuidador.getSobre(), response.getSobre());
         assertEquals(cuidador.getPerfis(), response.getPerfis());
     }
-    
 
     @Test
     void createWithCPFErrorTest() {
@@ -186,6 +186,12 @@ class CuidadorServiceImplTest {
             assertEquals(ObjectNotFoundException.class, ex.getClass());
             assertEquals("Objeto não encontrado", ex.getMessage());
         }
+    }
+
+    @Test
+    void deleteWithSuccessTest() {
+        doNothing().when(repository).deleteById(anyInt());
+        service.delete(ID);
     }
 
     private void iniciaOptionalCuidador() {

@@ -14,6 +14,7 @@ import java.util.Optional;
 public class CuidadorServiceImpl implements CuidadorService {
 
     private static final String JA_CADASTRADO_NO_SISTEMA = "já cadastrado no sistema";
+
     @Autowired
     private CuidadorRepository repository;
 
@@ -45,7 +46,6 @@ public class CuidadorServiceImpl implements CuidadorService {
 
     @Override
     public void delete(Integer id) {
-        findById(id);
         repository.deleteById(id);
     }
 
