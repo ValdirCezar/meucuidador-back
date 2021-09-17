@@ -20,8 +20,8 @@ import java.util.Optional;
 @SpringBootTest
 class CuidadorServiceImplTest {
 
-    private static final int ID        = 1;
-    private static final int ID_2      = 2;
+    private static final Integer ID    = 1;
+    private static final Integer ID_2  = 2;
     private static final String NOME   = "Valdir Cezar";
     private static final String CPF    = "66090972088";
     private static final String EMAIL  = "email@test.com";
@@ -96,11 +96,11 @@ class CuidadorServiceImplTest {
 
         Cuidador response = service.create(cuidadorDTO);
 
-        Assertions.assertEquals(response.getId(), cuidador.getId());
-        Assertions.assertEquals(response.getNome(), cuidador.getNome());
-        Assertions.assertEquals(response.getCpf(), cuidador.getCpf());
-        Assertions.assertEquals(response.getEmail(), cuidador.getEmail());
-        Assertions.assertEquals(response.getPerfis(), cuidador.getPerfis());
+        Assertions.assertEquals(cuidador.getId(), response.getId());
+        Assertions.assertEquals(cuidador.getNome(), response.getNome());
+        Assertions.assertEquals(cuidador.getCpf(), response.getCpf());
+        Assertions.assertEquals(cuidador.getEmail(), response.getEmail());
+        Assertions.assertEquals(cuidador.getPerfis(), response.getPerfis());
     }
 
     @Test
@@ -149,6 +149,20 @@ class CuidadorServiceImplTest {
             Assertions.assertEquals(exception.getClass(), ex.getClass());
         }
 
+    }
+
+    @Test
+    void updateWhitSuccessTest() {
+        Mockito.when(repository.findById(Mockito.anyInt())).thenReturn(optionalCuidador);
+        Mockito.when(repository.save(Mockito.any())).thenReturn(cuidador);
+
+        Cuidador response = service.update(cuidadorDTO, ID);
+
+        Assertions.assertEquals(cuidador.getId(), response.getId());
+        Assertions.assertEquals(cuidador.getNome(), response.getNome());
+        Assertions.assertEquals(cuidador.getCpf(), response.getCpf());
+        Assertions.assertEquals(cuidador.getEmail(), response.getEmail());
+        Assertions.assertEquals(cuidador.getPerfis(), response.getPerfis());
     }
 
     private void iniciaOptionalCuidador() {
