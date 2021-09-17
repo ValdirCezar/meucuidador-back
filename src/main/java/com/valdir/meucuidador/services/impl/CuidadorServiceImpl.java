@@ -43,6 +43,12 @@ public class CuidadorServiceImpl implements CuidadorService {
         return repository.save(obj);
     }
 
+    @Override
+    public void delete(Integer id) {
+        findById(id);
+        repository.deleteById(id);
+    }
+
     private void validByCPFEmailAndPhone(CuidadorDTO dto) {
         Optional<Cuidador> cuidador = repository.findByCpf(dto.getCpf());
         if(cuidador.isPresent() && !dto.getId().equals(cuidador.get().getId())) {

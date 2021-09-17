@@ -16,4 +16,6 @@ public interface CuidadorService {
     Cuidador create(CuidadorDTO dto);
 
     Cuidador update(CuidadorDTO dto, Integer id);
+
+    void delete(Integer id);
 }
