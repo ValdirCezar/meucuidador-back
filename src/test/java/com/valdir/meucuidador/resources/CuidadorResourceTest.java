@@ -33,8 +33,6 @@ class CuidadorResourceTest {
     private static final String PHONE               = "43984634308";
     private static final LocalDateTime DATA_CRIACAO = LocalDateTime.now();
 
-    private static final String JA_CADASTRADO_NO_SISTEMA = "já cadastrado no sistema";
-
     private Cuidador cuidador;
     private CuidadorDTO cuidadorDTO;
 
