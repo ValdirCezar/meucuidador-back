@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
 
 @SpringBootTest
 class CuidadorServiceImplTest {
@@ -34,6 +34,8 @@ class CuidadorServiceImplTest {
     private static final String SOBRE      = "Sobre";
     private static final String SENHA      = "123";
     private static final String PHONE      = "43984634308";
+
+    private static final String JA_CADASTRADO_NO_SISTEMA = "já cadastrado no sistema";
 
     @InjectMocks
     private CuidadorServiceImpl service;
@@ -54,7 +56,6 @@ class CuidadorServiceImplTest {
 
     @Test
     void findByIdSuccessTest() {
-
         when(repository.findById(anyInt())).thenReturn(this.optionalCuidador);
 
         Cuidador response = service.findById(ID);
@@ -73,13 +74,15 @@ class CuidadorServiceImplTest {
 
     @Test
     void findByIdErrorTest() {
+        ObjectNotFoundException notFoundException = new ObjectNotFoundException("Objeto não encontrado");
+        when(repository.findById(anyInt())).thenThrow(notFoundException);
 
         try{
             service.findById(ID);
         } catch (Exception ex) {
-            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals(notFoundException.getClass(), ex.getClass());
+            assertEquals(notFoundException.getMessage(), ex.getMessage());
         }
-
     }
 
     @Test
@@ -102,7 +105,6 @@ class CuidadorServiceImplTest {
 
     @Test
     void createSuccessTest() {
-
         when(repository.save(Mockito.any(Cuidador.class))).thenReturn(cuidador);
 
         Cuidador response = service.create(cuidadorDTO);
@@ -116,32 +118,35 @@ class CuidadorServiceImplTest {
         assertEquals(cuidador.getSobre(), response.getSobre());
         assertEquals(cuidador.getPerfis(), response.getPerfis());
     }
-    
 
     @Test
     void createWithCPFErrorTest() {
+        DataIntegratyViolationException exception
+                = new DataIntegratyViolationException("CPF " + JA_CADASTRADO_NO_SISTEMA);
 
-        when(repository.findByCpf(any())).thenReturn(optionalCuidador);
+        when(repository.findByCpf(Mockito.any())).thenReturn(optionalCuidador);
 
         try{
             cuidadorDTO.setId(ID_2);
             service.create(cuidadorDTO);
         } catch (Exception ex) {
-            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            assertEquals(exception.getClass(), ex.getClass());
         }
 
     }
 
     @Test
     void createWithEmailErrorTest() {
+        DataIntegratyViolationException exception
+                = new DataIntegratyViolationException("E-MAIL " + JA_CADASTRADO_NO_SISTEMA);
 
-        when(repository.findByEmail(any())).thenReturn(optionalCuidador);
+        when(repository.findByEmail(Mockito.any())).thenReturn(optionalCuidador);
 
         try{
             cuidadorDTO.setId(ID_2);
             service.create(cuidadorDTO);
         } catch (Exception ex) {
-            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            assertEquals(exception.getClass(), ex.getClass());
         }
 
     }
@@ -149,7 +154,7 @@ class CuidadorServiceImplTest {
     @Test
     void createWithPhoneErrorTest() {
 
-        when(repository.findByPhone(any())).thenReturn(optionalCuidador);
+        when(repository.findByPhone(Mockito.any())).thenReturn(optionalCuidador);
 
         try{
             cuidadorDTO.setId(ID_2);
@@ -162,9 +167,8 @@ class CuidadorServiceImplTest {
 
     @Test
     void updateWithSuccessTest() {
-
         when(repository.findById(anyInt())).thenReturn(optionalCuidador);
-        when(repository.save(any())).thenReturn(cuidador);
+        when(repository.save(Mockito.any())).thenReturn(cuidador);
 
         Cuidador response = service.update(cuidadorDTO, ID);
 
@@ -188,6 +192,20 @@ class CuidadorServiceImplTest {
         }
     }
 
+    @Test
+    void deleteByIdSuccessTest() {
+        doNothing().when(repository).deleteById(anyInt());
+        service.delete(ID);
+    }
+
+    @Test
+    void equalsAndHashcode() {
+        cuidador.equals(new Cuidador());
+        cuidadorDTO.equals(new CuidadorDTO());
+
+        assertEquals(cuidador.hashCode(), cuidador.hashCode());
+    }
+
     private void iniciaOptionalCuidador() {
         optionalCuidador = Optional.of(new Cuidador());
 
@@ -203,7 +221,6 @@ class CuidadorServiceImplTest {
 
     private void iniciaCuidador() {
         cuidador = new Cuidador();
-
         cuidador.setId(ID);
         cuidador.setNome(NOME);
         cuidador.setCpf(CPF);

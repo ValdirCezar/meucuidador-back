@@ -10,7 +10,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Entity(name = "TB_USUARIO")
 public abstract class Usuario {
 

@@ -7,13 +7,16 @@ import com.valdir.meucuidador.services.CuidadorService;
 import com.valdir.meucuidador.services.exception.DataIntegratyViolationException;
 import com.valdir.meucuidador.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CuidadorServiceImpl implements CuidadorService {
 
     private static final String JA_CADASTRADO_NO_SISTEMA = "já cadastrado no sistema";
+
     @Autowired
     private CuidadorRepository repository;
 
@@ -41,6 +44,11 @@ public class CuidadorServiceImpl implements CuidadorService {
         validByCPFEmailAndPhone(dto);
         obj = new Cuidador(dto);
         return repository.save(obj);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        repository.deleteById(id);
     }
 
     private void validByCPFEmailAndPhone(CuidadorDTO dto) {
