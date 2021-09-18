@@ -27,9 +27,7 @@ public class IdosoServiceImpl implements IdosoService {
     }
 
     @Override
-    public List<Idoso> findAll() {
-        return repository.findAll();
-    }
+    public List<Idoso> findAll() { return repository.findAll(); }
 
     @Override
     public Idoso create(IdosoDTO dto) {
@@ -47,23 +45,21 @@ public class IdosoServiceImpl implements IdosoService {
     }
 
     @Override
-    public void delete(Integer id) {
-        repository.deleteById(id);
-    }
+    public void delete(Integer id) { repository.deleteById(id); }
 
     private void validByCPFEmailAndPhone(IdosoDTO dto) {
-        Optional<Idoso> cuidador = repository.findByCpf(dto.getCpf());
-        if(cuidador.isPresent() && !dto.getId().equals(cuidador.get().getId())) {
+        Optional<Idoso> idoso = repository.findByCpf(dto.getCpf());
+        if(idoso.isPresent() && !dto.getId().equals(idoso.get().getId())) {
             throw new DataIntegratyViolationException("CPF " + JA_CADASTRADO_NO_SISTEMA);
         }
 
-        cuidador = repository.findByEmail(dto.getEmail());
-        if(cuidador.isPresent() && !dto.getId().equals(cuidador.get().getId())) {
+        idoso = repository.findByEmail(dto.getEmail());
+        if(idoso.isPresent() && !dto.getId().equals(idoso.get().getId())) {
             throw new DataIntegratyViolationException("E-MAIL " + JA_CADASTRADO_NO_SISTEMA);
         }
 
-        cuidador = repository.findByPhone(dto.getPhone());
-        if(cuidador.isPresent() && !dto.getId().equals(cuidador.get().getId())) {
+        idoso = repository.findByPhone(dto.getPhone());
+        if(idoso.isPresent() && !dto.getId().equals(idoso.get().getId())) {
             throw new DataIntegratyViolationException("TELEFONE " + JA_CADASTRADO_NO_SISTEMA);
         }
     }
