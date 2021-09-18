@@ -118,7 +118,6 @@ class CuidadorServiceImplTest {
         assertEquals(cuidador.getSobre(), response.getSobre());
         assertEquals(cuidador.getPerfis(), response.getPerfis());
     }
-    
 
     @Test
     void createWithCPFErrorTest() {
@@ -197,6 +196,14 @@ class CuidadorServiceImplTest {
     void deleteByIdSuccessTest() {
         doNothing().when(repository).deleteById(anyInt());
         service.delete(ID);
+    }
+
+    @Test
+    void equalsAndHashcode() {
+        cuidador.equals(new Cuidador());
+        cuidadorDTO.equals(new CuidadorDTO());
+
+        assertEquals(cuidador.hashCode(), cuidador.hashCode());
     }
 
     private void iniciaOptionalCuidador() {
